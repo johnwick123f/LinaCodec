@@ -1,6 +1,6 @@
 [project]
 name = "linacodec"
-version = "0.0.2"
+version = "0.0.1"
 description = "Linacodec is a highly compressive and rapid audio tokenizer for audio models."
 readme = "README.md"
 requires-python = ">=3.10"

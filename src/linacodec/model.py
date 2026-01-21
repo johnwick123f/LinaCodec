@@ -239,14 +239,14 @@ class LinaCodecModel(nn.Module):
             waveform = F.pad(waveform, (padding, padding), mode="constant")
 
         with torch.no_grad():
-            acoustic_wavlm_features = self.ssl_feature_extractor(waveform, num_layers=2) ## only needs 2 layers as acoustic info is present in them
-            waveform = self.ssl_feature_extractor.resampler(waveform)
-            distilled_wavlm_features = self.wavlm_model.extract_features(waveform, num_layers=max(self.distilled_layers))[0] ## semantic and prosody info is present in layer 4-10, 6-8 is best for quality
+            wavlm_features = self.ssl_feature_extractor(waveform, num_layers=9)
+            #waveform = self.ssl_feature_extractor.resampler(waveform)
+            #distilled_wavlm_features = self.wavlm_model.extract_features(waveform, num_layers=max(self.distilled_layers))[0] ## semantic and prosody info is present in layer 4-10, 6-8 is best for quality
 
-        local_ssl_features = self._process_ssl_features(distilled_wavlm_features, self.distilled_layers)
+        local_ssl_features = self._process_ssl_features(wavlm_features, [6, 9])
         local_ssl_features = self._normalize_ssl_features(local_ssl_features)
 
-        global_ssl_features = self._process_ssl_features(acoustic_wavlm_features, self.global_ssl_layers)
+        global_ssl_features = self._process_ssl_features(acoustic_wavlm_features, [1, 2])
 
         return local_ssl_features, global_ssl_features
 

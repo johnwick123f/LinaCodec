@@ -425,10 +425,11 @@ class LinaCodecModel(nn.Module):
         """
         audio_length = waveform.size(0)
         padding = self._calculate_waveform_padding(audio_length)
-        local_ssl_features, global_ssl_features = self.forward_ssl_features(waveform.unsqueeze(0), padding=padding)
+        with torch.autocast(device_type="cuda", dtype=torch.float16, enabled=True)
+            local_ssl_features, global_ssl_features = self.forward_ssl_features(waveform.unsqueeze(0), padding=padding)
 
         result = LinaCodecFeatures()
-        with torch.autocast(device_type="cuda", dtype=torch.float16, enabled=True):
+        with torch.autocast(device_type="cuda", dtype=torch.float32, enabled=True):
             if return_content:
                 content_embedding, token_indices, _, _ = self.forward_content(local_ssl_features)
                 result.content_embedding = content_embedding.squeeze(0)  # (seq_len, dim)

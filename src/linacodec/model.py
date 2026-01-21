@@ -246,7 +246,7 @@ class LinaCodecModel(nn.Module):
         local_ssl_features = self._process_ssl_features(wavlm_features, [6, 9])
         local_ssl_features = self._normalize_ssl_features(local_ssl_features)
 
-        global_ssl_features = self._process_ssl_features(acoustic_wavlm_features, [1, 2])
+        global_ssl_features = self._process_ssl_features(wavlm_features, [1, 2])
 
         return local_ssl_features, global_ssl_features
 
